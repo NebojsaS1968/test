@@ -16,9 +16,27 @@ const vratiGlumcaPoImenuIPrezimenu = async (req, res, next) => {
   
 }
 
-const vratiNagradeGlumca = async (req, res, next) => {}
+const vratiNagradeGlumca = async (req, res, next) => {
+  const { imePrezime } = req.params
+  const glumac = sviGlumci.filter(glumac => new RegExp(imePrezime, 'i').exec(glumac.name))
+  if (glumac.length===0){
+    res.status(200).send({err:"Doslo je do greske"})
+  }else{
+    const oscar = glumac[0].oscars
+    res.status(200).send({oscar})
+  }
+}
 
-const vratiFilmoveGlumca = async (req, res, next) => {}
+const vratiFilmoveGlumca = async (req, res, next) => {
+  const { imePrezime } = req.params
+  const glumac = sviGlumci.filter(glumac => new RegExp(imePrezime, 'i').exec(glumac.name))
+  if (glumac.length===0){
+    res.status(200).send({err:"Doslo je do greske"})
+  }else{
+    const filmovi = glumac[0].movies
+    res.status(200).send({filmovi})
+  }
+}
 
 module.exports = {
   vratiSveGlumce,
