@@ -13,7 +13,6 @@ const vratiGlumcaPoImenuIPrezimenu = async (req, res, next) => {
   }else{
     res.status(200).send({glumac})
   }
-  
 }
 
 const vratiNagradeGlumca = async (req, res, next) => {
