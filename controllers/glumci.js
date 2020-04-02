@@ -21,7 +21,10 @@ const vratiNagradeGlumca = async (req, res, next) => {
   if (glumac.length===0){
     res.status(200).send({err:"Doslo je do greske"})
   }else{
-    const oscar = glumac[0].oscars
+    const oscar = {
+      "Glumac": glumac[0].name,
+      "Nagrade": glumac[0].oscars
+    }
     res.status(200).send({oscar})
   }
 }
@@ -32,7 +35,10 @@ const vratiFilmoveGlumca = async (req, res, next) => {
   if (glumac.length===0){
     res.status(200).send({err:"Doslo je do greske"})
   }else{
-    const filmovi = glumac[0].movies
+    const filmovi = {
+      "Glumac": glumac[0].name,
+      "Filmovi": glumac[0].movies
+    }
     res.status(200).send({filmovi})
   }
 }
