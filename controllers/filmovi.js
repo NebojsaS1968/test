@@ -26,4 +26,10 @@ const vratiOpisFilma = async (req, res, next) => {
   }
 }
 
-module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma }
+//TRYING TO POST BODY JSON
+const dodajFilm = async (req, res, next) => {
+  const body = req.body
+  res.status(200).send({body})
+}
+
+module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm }
