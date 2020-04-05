@@ -29,10 +29,24 @@ const vratiOpisFilma = async (req, res, next) => {
   }
 }
 
-//TRYING TO POST BODY JSON
-const dodajFilm = async (req, res, next) => {
-  const body = req.body
-  res.status(200).send({body})
+// POST BODY JSON
+const dodajFilm =  (req, res) => {
+  const newFilm = {
+    id: req.body.id,
+    title:  req.body.title,
+    year: req.body.year,
+    runtime: req.body.runtime,
+    genres: req.body.genres,
+    director: req.body.director,
+    actors: req.body.actors,
+    plot: req.body.plot
+  }
+
+  if(!newFilm.id || !newFilm.title || !newFilm.year || !newFilm.runtime || !newFilm.genres || !newFilm.director || !newFilm.actors || !newFilm.plot){
+    return res.status(400).json({ msg: "Please include all properties" })
+  }
+  sviFilmovi.push(newFilm)
+  res.status(200).json(sviFilmovi)
 }
 
 module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm }

@@ -43,9 +43,29 @@ const vratiFilmoveGlumca = async (req, res, next) => {
   }
 }
 
+const dodajGlumca = (req, res) => {
+  const newActor = {
+      name: req.body.name,
+      rating: req.body.rating,
+      image_path: req.body.image_path,
+      alternative_name: req.body.alternative_name,
+      objectID: req.body.objectID,
+      oscars: req.body.oscars,
+      movies: req.body.movies
+  }
+
+  if(!newActor.name || !newActor.oscars || !newActor.movies){
+    return res.status(400).json({ msg: "Please include all properties" })
+  }
+
+  sviGlumci.push(newActor)
+  res.json(sviGlumci)
+}
+
 module.exports = {
   vratiSveGlumce,
   vratiGlumcaPoImenuIPrezimenu,
   vratiNagradeGlumca,
-  vratiFilmoveGlumca
+  vratiFilmoveGlumca,
+  dodajGlumca
 }

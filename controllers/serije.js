@@ -1,4 +1,5 @@
 const sveSerije = require('../data/serije.json')
+
 const vratiSveSerije = async (req, res, next) => {
   res.status(200)
   res.send({ serije: sveSerije })
@@ -42,10 +43,26 @@ const vratiEpizodeSerije = async (req, res, next) => {
   }
 }
 
+const dodajSeriju = (req, res) => {
+  const newSer = {
+    name: req.body.name,
+    description: req.body.description,
+    episode: req.body.episode
+  }
+
+  if(!newSer.name || !newSer.description || !newSer.episode){
+    return res.status(400).json({ msg: "Please include all properties" })
+  }
+
+  sveSerije.push(newSer)
+  res.status(200).json(sveSerije)
+}
+
 module.exports = {
   vratiSveSerije,
   vratiSerijuPoNazivu,
   vratiOpisSerije,
-  vratiEpizodeSerije
+  vratiEpizodeSerije,
+  dodajSeriju
 }
 
