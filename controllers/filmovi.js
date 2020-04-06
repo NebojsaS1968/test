@@ -1,6 +1,37 @@
 const sviFilmovi = require('../data/filmovi.json')
 
-const vratiSveFilmove = async (req, res, next) => {
+const sortFilmove = (a, b, value) => {
+  if (a[value] < b[value]) {
+    return -1
+  }
+  if (a[value] > b[value]) {
+    return 1
+  }
+  return 0
+}
+
+//SORT FILMS BY YEAR AND RATING
+const vratiSveFilmove =  (req, res, next) => {
+  if(req.query.sort === "godina" && req.query.order === "asc"){
+    const film = sviFilmovi.sort((a, b) => sortFilmove(a, b, "year"))
+    res.status(200).send({ film })
+  }
+
+  if(req.query.sort === "godina" && req.query.order === "desc"){
+    const film = sviFilmovi.sort((a, b) => sortFilmove(a, b, "year")).reverse()
+    res.status(200).send({ film })
+  }
+
+  if(req.query.sort === "ocena" && req.query.order === "desc"){
+    const film = sviFilmovi.sort((a, b) => sortFilmove(a, b, "rating"))
+    res.status(200).send({ film })
+  }
+
+  if(req.query.sort === "ocena" && req.query.order === "asc"){
+    const film = sviFilmovi.sort((a, b) => sortFilmove(a, b, "rating")).reverse()
+    res.status(200).send({ film })
+  }
+
   res.status(200)
   res.send({ filmovi: sviFilmovi })
 }
@@ -49,4 +80,4 @@ const dodajFilm =  (req, res) => {
   res.status(200).json(sviFilmovi)
 }
 
-module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm }
+module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm}

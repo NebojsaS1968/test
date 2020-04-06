@@ -2,6 +2,7 @@
   {
     "id": 1,
     "title": "Beetlejuice",
+    "rating": "75",
     "year": "1988",
     "runtime": "92",
     "genres": ["Comedy", "Fantasy"],
@@ -13,6 +14,7 @@
   {
     "id": 2,
     "title": "The Cotton Club",
+    "rating": "65",
     "year": "1984",
     "runtime": "127",
     "genres": ["Crime", "Drama", "Music"],
@@ -24,6 +26,7 @@
   {
     "id": 3,
     "title": "The Shawshank Redemption",
+    "rating": "80",
     "year": "1994",
     "runtime": "142",
     "genres": ["Crime", "Drama"],
