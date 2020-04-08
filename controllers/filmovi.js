@@ -1,4 +1,5 @@
 const sviFilmovi = require('../data/filmovi.json')
+const Film = require("../models/film");
 
 const sortFilmove = (a, b, value) => {
   if (a[value] < b[value]) {
@@ -11,7 +12,7 @@ const sortFilmove = (a, b, value) => {
 }
 
 //SORT FILMS BY YEAR AND RATING
-const vratiSveFilmove =  (req, res, next) => {
+const vratiSveFilmove = async (req, res, next) => {
   if(req.query.sort === "godina" && req.query.order === "asc"){
     const film = sviFilmovi.sort((a, b) => sortFilmove(a, b, "year"))
     res.status(200).send({ film })
@@ -32,8 +33,12 @@ const vratiSveFilmove =  (req, res, next) => {
     res.status(200).send({ film })
   }
 
-  res.status(200)
-  res.send({ filmovi: sviFilmovi })
+  if (!req.query.sort && !req.query.order) {
+    const Filmovi = await Film.find({})
+    res.status(200)
+    res.send({ filmovi: Filmovi })
+  }
+
 }
 
 const vratiFilmovePoNazivu = async (req, res, next) => {
@@ -60,10 +65,10 @@ const vratiOpisFilma = async (req, res, next) => {
   }
 }
 
-// POST BODY JSON
-const dodajFilm =  (req, res) => {
+
+const dodajFilm = async (req, res, next) => {
+  console.log(req.body)
   const newFilm = {
-    id: req.body.id,
     title:  req.body.title,
     year: req.body.year,
     runtime: req.body.runtime,
@@ -73,11 +78,25 @@ const dodajFilm =  (req, res) => {
     plot: req.body.plot
   }
 
-  if(!newFilm.id || !newFilm.title || !newFilm.year || !newFilm.runtime || !newFilm.genres || !newFilm.director || !newFilm.actors || !newFilm.plot){
+  if(!newFilm.title || !newFilm.year || !newFilm.runtime || !newFilm.genres || !newFilm.director || !newFilm.actors || !newFilm.plot){
     return res.status(400).json({ msg: "Please include all properties" })
   }
-  sviFilmovi.push(newFilm)
-  res.status(200).json(sviFilmovi)
+  const movie = new Film(newFilm)
+  const saveMovie = await movie.save()
+  res.status(201).json({ msg: "Film je sacuvan", newFilm: saveMovie })
 }
 
-module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm}
+const izbrisiFilm = async (req, res, next) =>{
+  const { id } = req.params;
+  await Film.findByIdAndDelete(id);
+  res.status(200).send({ msg: "Film je izbrisan" });
+}
+
+const azurirajFilm = async (req, res, next) =>{
+  const { id } = req.params;
+  const update = req.body;
+  await Film.findByIdAndUpdate(id, update);
+  res.status(200).send({ msg: "Film je azuriran" });
+}
+
+module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm, izbrisiFilm, azurirajFilm}
