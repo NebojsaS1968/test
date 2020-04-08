@@ -1,8 +1,10 @@
 const sveSerije = require('../data/serije.json')
+const Series = require("../models/series");
 
 const vratiSveSerije = async (req, res, next) => {
-  res.status(200)
-  res.send({ serije: sveSerije })
+    const Serije = await Series.find({})
+    res.status(200)
+    res.send({ serije: Serije })
 }
 
 const vratiSerijuPoNazivu = async (req, res, next) => {
@@ -43,19 +45,21 @@ const vratiEpizodeSerije = async (req, res, next) => {
   }
 }
 
-const dodajSeriju = (req, res) => {
+const dodajSeriju = async (req, res, next) => {
   const newSer = {
-    name: req.body.name,
-    description: req.body.description,
-    episode: req.body.episode
+    title: req.body.title,
+    seasons: req.body.seasons,
+    episodes: req.body.episodes,
+    plot: req.body.plot
   }
 
-  if(!newSer.name || !newSer.description || !newSer.episode){
+  if(!newSer.title || !newSer.seasons || !newSer.episodes || !newSer.plot){
     return res.status(400).json({ msg: "Please include all properties" })
   }
 
-  sveSerije.push(newSer)
-  res.status(200).json(sveSerije)
+  const series = new Series(newSer)
+  const saveSer = await series.save()
+  res.status(201).json({ msg: "Series is saved", newSer: saveSer })
 }
 
 module.exports = {

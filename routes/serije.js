@@ -10,11 +10,11 @@ const {
   dodajSeriju
 } = Serije
 
-router.get('/', vratiSveSerije)
+router.route('/').get(vratiSveSerije).post(dodajSeriju)
 router.get('/:naziv', vratiSerijuPoNazivu)
 router.get('/:naziv/opis', vratiOpisSerije)
 router.get('/:naziv/epizode', vratiEpizodeSerije)
 
-router.post('/', dodajSeriju)
+
 
 module.exports = router

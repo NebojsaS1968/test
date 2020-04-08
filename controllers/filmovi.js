@@ -83,20 +83,20 @@ const dodajFilm = async (req, res, next) => {
   }
   const movie = new Film(newFilm)
   const saveMovie = await movie.save()
-  res.status(201).json({ msg: "Film je sacuvan", newFilm: saveMovie })
+  res.status(201).json({ msg: "Film is saved", newFilm: saveMovie })
 }
 
 const izbrisiFilm = async (req, res, next) =>{
   const { id } = req.params;
   await Film.findByIdAndDelete(id);
-  res.status(200).send({ msg: "Film je izbrisan" });
+  res.status(200).send({ msg: "Film is deleted" });
 }
 
 const azurirajFilm = async (req, res, next) =>{
   const { id } = req.params;
   const update = req.body;
   await Film.findByIdAndUpdate(id, update);
-  res.status(200).send({ msg: "Film je azuriran" });
+  res.status(200).send({ msg: "Film is updated" });
 }
 
 module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm, izbrisiFilm, azurirajFilm}
