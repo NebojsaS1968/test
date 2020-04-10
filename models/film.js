@@ -7,7 +7,6 @@ const film = new Schema({
   runtime: Number,
   genres: [String],
   director: String,
-  actors: [String],
   plot: String,
   posterUrl: String
 });

@@ -6,7 +6,6 @@ const series = new Schema({
   seasons: Number,
   episodes: Number,
   genres: [String],
-  actors: [String],
   plot: String,
   posterUrl: String
 });
