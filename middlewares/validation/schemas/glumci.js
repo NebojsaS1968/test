@@ -3,8 +3,8 @@ const Joi = require("joi");
 const addActorSchema = Joi.object({
   name: Joi.string().required(),
   age: Joi.number().required(),
-  awards: Joi.array().items(Joi.string()).required(),
-  movies: Joi.array().items(Joi.string()).required()
+  awards: Joi.array().items(Joi.string()).required()
+
 });
 
 const updateActorSchema = Joi.object({

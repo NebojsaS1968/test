@@ -89,19 +89,19 @@ const deleteActor = async (req, res, next) => {
 
 const updateActor = async (req, res, next) => {
   const { id } = req.params
-  const { film } = req.body
+  const { movies } = req.body
 
   const actor = await Actor.findById(id)
-  const movie = await Film.findById(film)
-  console.log(film)
+  const movie = await Film.findById(movies)
+  console.log(movies)
 
-  if(actor.movies.includes(film)){
+  if(actor.movies.includes(movies)){
     res.status(200).send({ msg: "Movie already exists for this actor!" })
   } else if(movie){
     movie.actors.push(id)
     const save = await movie.save()
 
-    actor.movies.push(film)
+    actor.movies.push(movies)
     await actor.save()
 
     res.status(201).send({save})

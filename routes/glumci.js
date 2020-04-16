@@ -19,11 +19,11 @@ const {
   deleteActor
 } = Glumci
 
-router.route('/').get(getAllActors).post(validacija(addActorSchema), addActor)
+router.route('/').get(getAllActors).post(validacija(addActorSchema), addActor).delete(deleteActor)
 router.route('/:id')
 .get(getActorById)
 .patch(validacija(updateActorSchema), updateActor)
-.delete(deleteActor)
+
  
 router.route('/:id/awards').get(getAwards) 
 router.route('/:id/movies').get(getActorFilms)
