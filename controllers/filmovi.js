@@ -1,4 +1,4 @@
-const Film = require("../models/film");
+const Film = require("../models/film")
 
 const sortFilmove = (a, b, value) => {
   if (a[value] < b[value]) {
@@ -10,47 +10,64 @@ const sortFilmove = (a, b, value) => {
   return 0
 }
 
-//SORT FILMS BY YEAR AND RATING
-const vratiSveFilmove = async (req, res, next) => {
+const getAllFilms = async (req, res, next) => {
+  //CASE 1
   if(req.query.sort === "godina" && req.query.order === "asc"){
-    const film = await Film.find({});
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "year"));
-    res.status(200).send({ filmovi });
+    const film = await Film.find({})
+    const filmovi = film.sort((a, b) => sortFilmove(a, b, "year"))
+    res.status(200).send({ filmovi })
   }
 
+  //CASE 2
   if(req.query.sort === "godina" && req.query.order === "desc"){
-    const film = await Film.find({});
+    const film = await Film.find({})
     const filmovi = film.sort((a, b) => sortFilmove(a, b, "year")).reverse()
-    res.status(200).send({ filmovi });
+    res.status(200).send({ filmovi })
   }
 
+  //CASE 3
   if(req.query.sort === "ocena" && req.query.order === "desc"){
-    const film = await Film.find({});
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "rating"));
-    res.status(200).send({ filmovi });
+    const film = await Film.find({})
+    const filmovi = film.sort((a, b) => sortFilmove(a, b, "rating"))
+    res.status(200).send({ filmovi })
   }
 
+  //CASE 4
   if(req.query.sort === "ocena" && req.query.order === "asc"){
-    const film = await Film.find({});
+    const film = await Film.find({})
     const filmovi = film.sort((a, b) => sortFilmove(a, b, "rating")).reverse()
-    res.status(200).send({ filmovi });
+    res.status(200).send({ filmovi })
   }
 
+  //CASE 5
   if (!req.query.sort && !req.query.order) {
+    if (req.query.limit){
+      const filmovi = await Film.find({}).limit(parseInt(req.query.limit))
+      return res.status(200).send(filmovi)
+   }
     const Filmovi = await Film.find({})
     res.status(200)
     res.send({ filmovi: Filmovi })
   }
-
 }
 
-const vratiFilmovePoNazivu = async (req, res, next) => {
+const getFilmById = async (req, res, next) => {
   const { id } = req.params
-  const film = await Film.findById(id)
+  const film = await Film.findById(id).populate("actors")
   res.status(200).send({ film })
 }
 
-const vratiOpisFilma = async (req, res, next) => {
+const getFilmByTitle = async (req, res, next) => {
+  const { title } = req.params
+  const movie = await Film.find().where("title").equals(new RegExp(title, "i"))
+  if (movie.length === 0) {
+    res.status(200).send({ err: "No such movie in the database!" })
+  } else {
+    res.status(200).send({ movie })
+  }
+}
+
+const getFilmPlot = async (req, res, next) => {
   const { id } = req.params
   const film = await Film.findById(id)
     const opis = {
@@ -62,7 +79,7 @@ const vratiOpisFilma = async (req, res, next) => {
 
 
 
-const dodajFilm = async (req, res, next) => {
+const addFilm = async (req, res, next) => {
   console.log(req.body)
   const newFilm = {
     title:  req.body.title,
@@ -70,7 +87,9 @@ const dodajFilm = async (req, res, next) => {
     genres: req.body.genres,
     director: req.body.director,
     plot: req.body.plot,
-    rating: req.body.rating
+    rating: req.body.rating,
+    actors: req.body.actors,
+    runtime: req.body.runtime
   }
   const movie = new Film(newFilm)
   const saveMovie = await movie.save()
@@ -78,17 +97,25 @@ const dodajFilm = async (req, res, next) => {
 }
 
 
-const izbrisiFilm = async (req, res, next) =>{
-  const { id } = req.params;
-  await Film.findByIdAndDelete(id);
-  res.status(200).send({ msg: "Film is deleted" });
+const deleteFilm = async (req, res, next) =>{
+  const { id } = req.params
+  await Film.findByIdAndDelete(id)
+  res.status(200).send({ msg: "Film is deleted" })
 }
 
-const azurirajFilm = async (req, res, next) =>{
-  const { id } = req.params;
-  const update = req.body;
-  await Film.findByIdAndUpdate(id, update);
-  res.status(200).send({ msg: "Film is updated" });
+const updateFilm = async (req, res, next) =>{
+  const { id } = req.params
+  const update = req.body
+  await Film.findByIdAndUpdate(id, update)
+  res.status(200).send({ msg: "Film is updated" })
 }
 
-module.exports = { vratiSveFilmove, vratiFilmovePoNazivu, vratiOpisFilma, dodajFilm, izbrisiFilm, azurirajFilm}
+module.exports = {
+   getAllFilms,
+   getFilmById, 
+   getFilmPlot, 
+   addFilm, 
+   deleteFilm, 
+   updateFilm,
+   getFilmByTitle
+  }

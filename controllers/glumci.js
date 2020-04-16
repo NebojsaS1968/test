@@ -1,71 +1,120 @@
-const sviGlumci = require('../data/glumci.json')
+const Actor = require("../models/actor")
+const Film = require("../models/film")
 
-const vratiSveGlumce = async (req, res, next) => {
-  res.status(200)
-  res.send({ glumci: sviGlumci })
+const sortActors = (a, b, value) => {
+  if (a[value] < b[value]) {
+    return -1
+  }
+  if (a[value] > b[value]) {
+    return 1
+  }
+  return 0
 }
 
-const vratiGlumcaPoImenuIPrezimenu = async (req, res, next) => {
-  const { imePrezime } = req.params
-  const glumac = sviGlumci.filter(glumac => new RegExp(imePrezime, 'i').exec(glumac.name))
-  if (glumac.length===0){
-    res.status(200).send({err:"Doslo je do greske"})
-  }else{
-    res.status(200).send({glumac})
+const getAllActors = async (req, res, next) => {
+  if(req.query.age === "asc"){
+    const actor = await Actor.find({})
+    const actors = actor.sort((a, b) => sortActors(a, b, "age"))
+    res.status(200).send({ actors }) 
+  }
+
+  if(req.query.age === "desc"){
+    const actor = await Actor.find({})
+    const actors = actor.sort((a, b) => sortActors(a, b, "age")).reverse()
+    res.status(200).send({ actors })
+  }
+
+  if(!req.query.age){
+    if (req.query.limit){
+      const actors = await Actor.find({}).limit(parseInt(req.query.limit))
+      return res.status(200).send(actors)
+   }
+    const actors = await Actor.find({})
+    res.status(200).send({ actors: actors })
   }
 }
 
-const vratiNagradeGlumca = async (req, res, next) => {
-  const { imePrezime } = req.params
-  const glumac = sviGlumci.filter(glumac => new RegExp(imePrezime, 'i').exec(glumac.name))
-  if (glumac.length===0){
-    res.status(200).send({err:"Doslo je do greske"})
-  }else{
-    const oscar = {
-      "Glumac": glumac[0].name,
-      "Nagrade": glumac[0].oscars
+const getActorById = async (req, res, next) =>{
+  const { id } = req.params
+  const actor = await Actor.findById(id).populate("movies")
+  res.status(200).send({ actor })
+}
+
+const getActorByName = async (req, res, next) => {
+  const { name } = req.params
+  const actor = await Actor.find().where("name").equals(new RegExp(name, "i"))
+  if(actor.length === 0){
+    res.status(200).send({ err: "Actor doesn't exist in the database!" })
+  } else{
+    res.status(200).send({actor})
+  }
+}
+
+const getAwards = async (req, res, next) => {
+  const { id } = req.params
+  const actor = await Actor.findById(id)
+    const awards = {
+      "Actor": actor.name,
+      "Awards": actor.awards
     }
-    res.status(200).send({oscar})
-  }
+    res.status(200).send({awards})
 }
 
-const vratiFilmoveGlumca = async (req, res, next) => {
-  const { imePrezime } = req.params
-  const glumac = sviGlumci.filter(glumac => new RegExp(imePrezime, 'i').exec(glumac.name))
-  if (glumac.length===0){
-    res.status(200).send({err:"Doslo je do greske"})
-  }else{
-    const filmovi = {
-      "Glumac": glumac[0].name,
-      "Filmovi": glumac[0].movies
+const getActorFilms = async (req, res, next) => {
+  const { id } = req.params
+  const actor = await Actor.findById(id)
+    const movies = {
+      "Actor": actor.name,
+      "Movies": actor.movies
     }
-    res.status(200).send({filmovi})
-  }
+    res.status(200).send({movies})
 }
 
-const dodajGlumca = (req, res) => {
+const addActor = async (req, res, next) => {
   const newActor = {
       name: req.body.name,
-      rating: req.body.rating,
-      image_path: req.body.image_path,
-      alternative_name: req.body.alternative_name,
-      objectID: req.body.objectID,
-      oscars: req.body.oscars,
-      movies: req.body.movies
+      awards: req.body.awards,
+      movies: req.body.movies,
+      age: req.body.age
   }
-
-  if(!newActor.name || !newActor.oscars || !newActor.movies){
-    return res.status(400).json({ msg: "Please include all properties" })
-  }
-
-  sviGlumci.push(newActor)
-  res.json(sviGlumci)
+  const actor = new Actor(newActor)
+  const saveActor = await actor.save()
+  res.status(201).send({ msg: "Actor has been saved", newActor: saveActor })
 }
 
+const deleteActor = async (req, res, next) => {
+  await Actor.deleteMany();
+  res.status(200).send("Empty actors!");
+}
+
+const updateActor = async (req, res, next) => {
+  const { id } = req.params
+  const { film } = req.body
+
+  const actor = await Actor.findById(id)
+  const movie = await Film.findById(film)
+  console.log(film)
+
+  if(actor.movies.includes(film)){
+    res.status(200).send({ msg: "Movie already exists for this actor!" })
+  } else if(movie){
+    movie.actors.push(id)
+    const save = await movie.save()
+
+    actor.movies.push(film)
+    await actor.save()
+
+    res.status(201).send({save})
+  } else {res.status(200).send({ msg: "Wrong id!" })}
+} 
+
 module.exports = {
-  vratiSveGlumce,
-  vratiGlumcaPoImenuIPrezimenu,
-  vratiNagradeGlumca,
-  vratiFilmoveGlumca,
-  dodajGlumca
+  getAllActors,
+  getActorByName,
+  getAwards,
+  getActorFilms,
+  addActor,
+  getActorById,
+  deleteActor,
+  updateActor
 }
