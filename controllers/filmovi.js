@@ -110,6 +110,11 @@ const updateFilm = async (req, res, next) =>{
   res.status(200).send({ msg: "Film is updated" })
 }
 
+const deleteAllFilms = async (req, res, next) =>{
+  await Film.deleteMany()
+  res.status(200).send({msg: "Empty films!"})
+}
+
 module.exports = {
    getAllFilms,
    getFilmById, 
@@ -117,5 +122,6 @@ module.exports = {
    addFilm, 
    deleteFilm, 
    updateFilm,
-   getFilmByTitle
+   getFilmByTitle,
+   deleteAllFilms
   }

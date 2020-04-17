@@ -82,9 +82,9 @@ const addActor = async (req, res, next) => {
   res.status(201).send({ msg: "Actor has been saved", newActor: saveActor })
 }
 
-const deleteActor = async (req, res, next) => {
+const deleteAllActors = async (req, res, next) => {
   await Actor.deleteMany();
-  res.status(200).send("Empty actors!");
+  res.status(200).send({msg: "Empty actors!"});
 }
 
 const updateActor = async (req, res, next) => {
@@ -108,6 +108,12 @@ const updateActor = async (req, res, next) => {
   } else {res.status(200).send({ msg: "Wrong id!" })}
 } 
 
+const deleteActor = async (req, res, next) =>{
+  const { id } = req.params
+  await Actor.findByIdAndDelete(id)
+  res.status(200).send({ msg: "Actor is deleted" })
+}
+
 module.exports = {
   getAllActors,
   getActorByName,
@@ -115,6 +121,7 @@ module.exports = {
   getActorFilms,
   addActor,
   getActorById,
-  deleteActor,
-  updateActor
+  deleteAllActors,
+  updateActor,
+  deleteActor
 }

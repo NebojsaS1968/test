@@ -15,10 +15,11 @@ const {
    addFilm, 
    deleteFilm, 
    updateFilm,
-   getFilmByTitle 
+   getFilmByTitle,
+   deleteAllFilms 
   } = Filmovi
 
-router.route('/').get(getAllFilms).post(validacija(addFilmSchema), addFilm)
+router.route('/').get(getAllFilms).post(validacija(addFilmSchema), addFilm).delete(deleteAllFilms)
 router.route('/:id')
 .get(getFilmById)
 .put(validacija(addFilmSchema), updateFilm)

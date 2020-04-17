@@ -9,7 +9,10 @@ const film = new Schema({
     type: Schema.Types.ObjectId,
     ref: "actor"
   }],
-  genres: [String],
+  genres: [{
+    type: Schema.Types.ObjectId,
+    ref: "genre"
+  }],
   director: String,
   plot: String,
   posterUrl: String

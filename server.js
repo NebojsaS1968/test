@@ -15,9 +15,11 @@ mongoose
 const filmovi = require('./routes/filmovi')
 const serije = require('./routes/serije')
 const glumci = require('./routes/glumci')
+const genres = require('./routes/genres')
 
 app.use('/api/v1/filmovi', filmovi)
 app.use('/api/v1/serije', serije)
 app.use('/api/v1/glumci', glumci)
+app.use('/api/v1/genres', genres)
 
 app.listen(port, () => console.log('Server is listening on port 3000'))
