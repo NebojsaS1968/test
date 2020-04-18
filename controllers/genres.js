@@ -55,7 +55,7 @@ const addFilmToGenre = async (req, res, next) => {
   const movie = await Film.findById(movies)
   //console.log(movies)
 
-  if(genre.movies.includes(movies)){
+  if(movie.genres.includes(id)){
     res.status(200).send({ msg: "Movie already exists for this genre!" })
   } else if(movie){
     movie.genres.push(id)
@@ -74,8 +74,19 @@ const deleteGenre = async (req, res, next) =>{
   res.status(200).send({ msg: "Genre is deleted" })
 }
 
+const removeFilm = async (req, res, next) =>{
+  const { id } = req.params
+  const film = req.body.film
+
+  await Genre.updateOne({ _id: id }, { $pull: { movies: { $in: film } } })
+  await Film.updateOne({ _id: film }, { $pull: { genres: { $in: id } } })
+
+  res.status(200).send({ msg: "Films is deleted" })
+}
+
 module.exports = {
   getAllGenres,
+  removeFilm,
   getGenreByName,
   getFilmsByGenre,
   addGenre,

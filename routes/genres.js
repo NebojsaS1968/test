@@ -16,7 +16,8 @@ const {
   addGenre,
   addFilmToGenre,
   deleteAllGenres,
-  deleteGenre
+  deleteGenre,
+  removeFilm
 } = Genres
 
 router.route('/').get(getAllGenres).post(validacija(addZanrSchema), addGenre).delete(deleteAllGenres)
@@ -27,5 +28,6 @@ router.route('/:id')
 
 router.route('/:id/movies').get(getFilmsByGenre)
 router.route('/search/:name').get(getGenreByName)
+router.route('/:id/remove').delete(removeFilm)
 
 module.exports = router

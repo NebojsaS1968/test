@@ -87,7 +87,7 @@ const deleteAllActors = async (req, res, next) => {
   res.status(200).send({msg: "Empty actors!"});
 }
 
-const updateActor = async (req, res, next) => {
+const addActorToFilm = async (req, res, next) => {
   const { id } = req.params
   const { movies } = req.body
 
@@ -122,6 +122,6 @@ module.exports = {
   addActor,
   getActorById,
   deleteAllActors,
-  updateActor,
+  addActorToFilm,
   deleteActor
 }

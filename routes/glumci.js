@@ -15,7 +15,7 @@ const {
   getAwards,
   getActorFilms,
   addActor,
-  updateActor,
+  addActorToFilm,
   deleteAllActors,
   deleteActor
 } = Glumci
@@ -23,7 +23,7 @@ const {
 router.route('/').get(getAllActors).post(validacija(addActorSchema), addActor).delete(deleteAllActors)
 router.route('/:id')
 .get(getActorById)
-.patch(validacija(updateActorSchema), updateActor)
+.patch(validacija(updateActorSchema), addActorToFilm)
 .delete(deleteActor)
  
 router.route('/:id/awards').get(getAwards) 
