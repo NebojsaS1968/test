@@ -7,8 +7,6 @@ const addFilmSchema = Joi.object({
   rating: Joi.number().required(),
   director: Joi.string().required(),
   runtime: Joi.number().required(),
-  genres: Joi.array().items(Joi.string()).required(),
-  actors: Joi.array().items(Joi.string()).required()
 });
 
 const updateFilmSchema = Joi.object({
@@ -19,7 +17,8 @@ const updateFilmSchema = Joi.object({
     rating: Joi.number(),
     director: Joi.string(),
     genres: Joi.array().items(Joi.string()),
-    actors: Joi.array().items(Joi.string())
+    actors: Joi.array().items(Joi.string()),
+    users: Joi.array().items(Joi.string())
 });
 
 module.exports = { addFilmSchema, updateFilmSchema };

@@ -5,6 +5,10 @@ const film = new Schema({
   rating: Number,
   year: Number,
   runtime: Number,
+  users: [{
+    type: Schema.Types.ObjectId,
+    ref: "user"
+  }],
   actors: [{
     type: Schema.Types.ObjectId,
     ref: "actor"

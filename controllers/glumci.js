@@ -95,7 +95,7 @@ const addActorToFilm = async (req, res, next) => {
   const movie = await Film.findById(movies)
   console.log(movies)
 
-  if(actor.movies.includes(movies)){
+  if(actor.movies.includes(movies) || movie.actors.includes(id)){
     res.status(200).send({ msg: "Movie already exists for this actor!" })
   } else if(movie){
     movie.actors.push(id)
@@ -108,6 +108,16 @@ const addActorToFilm = async (req, res, next) => {
   } else {res.status(200).send({ msg: "Wrong id!" })}
 } 
 
+const deleteFilm = async (req, res, next) =>{
+  const { id } = req.params
+  const film = req.body.film
+
+  await Actor.updateOne({ _id: id }, { $pull: { movies: { $in: film } } })
+  await Film.updateOne({ _id: film }, { $pull: { users: { $in: id } } })
+
+  res.status(200).send({ msg: "Film is deleted" })
+}
+
 const deleteActor = async (req, res, next) =>{
   const { id } = req.params
   await Actor.findByIdAndDelete(id)
@@ -118,6 +128,7 @@ module.exports = {
   getAllActors,
   getActorByName,
   getAwards,
+  deleteFilm,
   getActorFilms,
   addActor,
   getActorById,

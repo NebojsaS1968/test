@@ -53,7 +53,7 @@ const getAllFilms = async (req, res, next) => {
 
 const getFilmById = async (req, res, next) => {
   const { id } = req.params
-  const film = await Film.findById(id).populate("actors")
+  const film = await Film.findById(id).populate("actors").populate("users")
   res.status(200).send({ film })
 }
 
