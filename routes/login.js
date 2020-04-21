@@ -7,7 +7,6 @@ const {
    addUserSchema
  } = require("../middlewares/validation/schemas/users") 
  
-
 const {
    findUser
 } = Login
