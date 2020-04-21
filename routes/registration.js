@@ -3,9 +3,9 @@ const router = express.Router()
 const Registration = require('../controllers/registration')
 
 const {
-   reg
+   regUser
 } = Registration
 
-router.route('/').post(reg)
+router.route('/').post(regUser)
 
 module.exports = router

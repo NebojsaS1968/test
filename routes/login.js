@@ -3,9 +3,9 @@ const router = express.Router()
 const Login = require('../controllers/login')
 
 const {
-   login
+   findUser
 } = Login
 
-router.route('/').post(login)
+router.route('/').post(findUser)
 
 module.exports = router
