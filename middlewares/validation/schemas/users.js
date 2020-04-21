@@ -1,7 +1,8 @@
 const Joi = require("joi");
 
 const addUserSchema = Joi.object({
-  name: Joi.string().required()
+  name: Joi.string().required(),
+  password: Joi.string().required()
 });
 
 const addWatchSchema = Joi.object({
