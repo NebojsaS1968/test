@@ -1,5 +1,6 @@
 const User = require("../models/user")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const findUser = async (req, res, next) => {
   let user = await User.findOne({ name: req.body.name })
@@ -10,7 +11,8 @@ const findUser = async (req, res, next) => {
     if (!validPassword) {
         return res.status(400).send({ err:"Wrong password" })
     }
-    res.send(true)
+    const jwtToken = jwt.sign({ username: user.name, userId: user._id }, "Profesionalac", { expiresIn: "1h" })
+    res.status(200).send({ msg: "Logged in!", token: jwtToken })
 }
 
 module.exports = { findUser }

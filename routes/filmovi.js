@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { validacija } = require("../middlewares/validation/validate")
+const { auth } = require("../middlewares/validation/auth")
 
 const {
     addFilmSchema,
@@ -19,14 +20,18 @@ const {
    deleteAllFilms 
   } = Filmovi
 
-router.route('/').get(getAllFilms).post(validacija(addFilmSchema), addFilm).delete(deleteAllFilms)
-router.route('/:id')
-.get(getFilmById)
-.put(validacija(addFilmSchema), updateFilm)
-.delete(deleteFilm)
-.patch(validacija(updateFilmSchema), updateFilm)
+router.route('/')
+.get(auth, getAllFilms)
+.post([auth, validacija(addFilmSchema)], addFilm)
+.delete(auth, deleteAllFilms)
 
-router.get('/:id/plot', getFilmPlot)
+router.route('/:id')
+.get(auth, getFilmById)
+.put([auth, validacija(addFilmSchema)], updateFilm)
+.delete(auth, deleteFilm)
+.patch([auth, validacija(updateFilmSchema)], updateFilm)
+
+router.get('/:id/plot', auth, getFilmPlot)
 router.get("/search/:title", getFilmByTitle)
 
 

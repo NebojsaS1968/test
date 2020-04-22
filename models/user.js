@@ -5,9 +5,12 @@ const user = new Schema({
   password: String,
   movies: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "film",
-    },
+      movie: {
+        type: Schema.Types.ObjectId,
+        ref: "film"
+      },
+      grade: [Number]
+    }
   ],
 });
 const User = mongoose.model("user", user);

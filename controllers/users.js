@@ -34,7 +34,7 @@ const addToWatchlist = async (req, res, next) => {
 
 const getUserById = async (req, res, next) => {
   const { id } = req.params
-  const user = await User.findById(id).populate("movies")
+  const user = await User.findById(id)
   res.status(200).send({ user })
 }
 
@@ -53,6 +53,26 @@ const clearUsers = async (req, res, next) => {
   res.status(200).send({ msg: "Empty users!"})
 };
 
+//NOT WORKING
+//ONE USER TO RATE ONE FILM AT HIS WILL
+const rateFilm = async (req, res, next) => {
+  const { movie } = req.body
+  const { id } = req.params
+  const { grade } = req.body
+
+  const user = await User.findById(id)
+  const film = await Film.findById(movie)
+
+  if(user.movies.includes(movie) || film.users.includes(id)){
+    const x = user.movies.push(grade)
+    console.log(x)
+    const save = await user.save()
+    res.status(201).send(save)
+  } else{
+    res.status(400).send({ err: "Wrong id!" })
+  }
+}
+
 module.exports = {
   getUsers,
   addUser,
@@ -60,4 +80,5 @@ module.exports = {
   getUserById,
   deleteFilm,
   clearUsers,
+  rateFilm
 };

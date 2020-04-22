@@ -15,6 +15,7 @@ const {
   getUserById,
   deleteFilm,
   clearUsers,
+  rateFilm
 } = Watchlist
 
 router
@@ -27,4 +28,8 @@ router
   .patch(validacija(addWatchSchema), addToWatchlist)
   .get(getUserById)
   .delete(deleteFilm)
+
+router.route("/:id/rate")
+.patch(validacija(addWatchSchema), rateFilm)
+  
 module.exports = router
