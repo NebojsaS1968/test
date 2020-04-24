@@ -9,7 +9,7 @@ const user = new Schema({
         type: Schema.Types.ObjectId,
         ref: "film"
       },
-      grade: [Number]
+      grade: Number
     }
   ],
 });

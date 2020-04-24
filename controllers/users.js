@@ -62,14 +62,17 @@ const rateFilm = async (req, res, next) => {
 
   const user = await User.findById(id)
   const film = await Film.findById(movie)
-
-  if(user.movies.includes(movie) || film.users.includes(id)){
-    const x = user.movies.push(grade)
-    console.log(x)
+//if(user.movies.includes(movie)){
+   // user.movies.push(grade)
+  //  const save = await user.save()
+  //  res.status(201).send(save)
+//}
+    user.movies.push(grade)
     const save = await user.save()
     res.status(201).send(save)
-  } else{
-    res.status(400).send({ err: "Wrong id!" })
+
+  if(!user){
+    return res.status(400).send({ err: "Wrong id!" })
   }
 }
 
