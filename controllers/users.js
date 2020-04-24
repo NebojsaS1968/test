@@ -53,8 +53,6 @@ const clearUsers = async (req, res, next) => {
   res.status(200).send({ msg: "Empty users!"})
 };
 
-//NOT WORKING
-//ONE USER TO RATE ONE FILM AT HIS WILL
 const rateFilm = async (req, res, next) => {
   const { movie } = req.body
   const { id } = req.params
@@ -62,17 +60,19 @@ const rateFilm = async (req, res, next) => {
 
   const user = await User.findById(id)
   const film = await Film.findById(movie)
-//if(user.movies.includes(movie)){
-   // user.movies.push(grade)
-  //  const save = await user.save()
-  //  res.status(201).send(save)
-//}
-    user.movies.push(grade)
-    const save = await user.save()
-    res.status(201).send(save)
-
+  
+    if(user.movies.includes(movie) || film.users.includes(id)){
+      const index = user.movies.findIndex(i => i.id === movie)
+      user.movies[index].grade = grade
+      const save = await user.save()
+      return res.status(201).send(save)
+    }
+    
   if(!user){
-    return res.status(400).send({ err: "Wrong id!" })
+    return res.status(400).send({ err: "Wrong id of the user!" })
+  }
+  if(!film){
+    return res.status(400).send({ err: "Wrong id of the film!" })
   }
 }
 
