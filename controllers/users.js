@@ -20,13 +20,13 @@ const addToWatchlist = async (req, res, next) => {
   const user = await User.findById(id)
   const movie = await Film.findById(movies)
   console.log(movie)
-  if (user.movies.includes(movies) || movie.users.includes(id)) {
+  if (user.watchlist.includes(movies) || movie.users.includes(id)) {
     res.status(200).send({ msg: "Movie already exists in this user watchlist!" })
   } else if (movie) {
     movie.users.push(id)
     const save = await movie.save()
 
-    user.movies.push(movies)
+    user.watchlist.push(movies)
     await user.save()
     res.status(201).send(save)
   } else res.status(200).send({ error: "Wrong id!" })
@@ -38,16 +38,18 @@ const getUserById = async (req, res, next) => {
   res.status(200).send({ user })
 }
 
+//DELETE FILM FROM WATCHLIST    
 const deleteFilm = async (req, res, next) => {
   const { id } = req.params
   const film = req.body.film
 
-  await User.updateOne({ _id: id }, { $pull: { movies: { $in: film } } })
+  await User.updateOne({ _id: id }, { $pull: { watchlist: { $in: film } } })
   await Film.updateOne({ _id: film }, { $pull: { users: { $in: id } } })
 
   res.status(200).send({ msg: "Film is deleted" })
 };
 
+//CLEAR ALL USERS
 const clearUsers = async (req, res, next) => {
   await User.deleteMany()
   res.status(200).send({ msg: "Empty users!"})

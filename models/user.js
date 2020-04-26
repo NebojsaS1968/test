@@ -11,7 +11,7 @@ const user = new Schema({
       },
       grade: Number
     }
-  ],
+  ]
 });
 const User = mongoose.model("user", user);
 module.exports = User;
