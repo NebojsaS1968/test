@@ -21,8 +21,8 @@ const {
   } = Filmovi
 
 router.route('/')
-.get(auth, getAllFilms)
-.post([auth, validacija(addFilmSchema)], addFilm)
+.get(auth, getAllFilms) 
+.post(auth, addFilm) 
 .delete(auth, deleteAllFilms)
 
 router.route('/:id')
