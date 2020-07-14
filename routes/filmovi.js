@@ -21,7 +21,7 @@ const {
   } = Filmovi
 
 router.route('/')
-.get(auth, getAllFilms) 
+.get(getAllFilms) // Removed auth for testing reasons
 .post(auth, addFilm) 
 .delete(auth, deleteAllFilms)
 
