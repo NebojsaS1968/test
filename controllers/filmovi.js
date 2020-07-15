@@ -59,11 +59,11 @@ const getFilmById = async (req, res, next) => {
 
 const getFilmByTitle = async (req, res, next) => {
   const { title } = req.params
-  const movie = await Film.find().where("title").equals(new RegExp(title, "i"))
-  if (movie.length === 0) {
-    res.status(200).send({ err: "No such movie in the database!" })
+  const film = await Film.find().where("title").equals(new RegExp(title, "i"))
+  if (film.length === 0) {
+    res.status(200).send({ err: "No such film in the database!" })
   } else {
-    res.status(200).send({ movie })
+    res.status(200).send({ film })
   }
 }
 

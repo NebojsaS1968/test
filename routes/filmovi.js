@@ -26,7 +26,7 @@ router.route('/')
 .delete(auth, deleteAllFilms)
 
 router.route('/:id')
-.get(auth, getFilmById)
+.get(getFilmById)
 .put([auth, validacija(addFilmSchema)], updateFilm)
 .delete(auth, deleteFilm)
 .patch([auth, validacija(updateFilmSchema)], updateFilm)
