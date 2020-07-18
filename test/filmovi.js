@@ -1,6 +1,7 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 
+const Film = require('../models/film')
 const index = require('../server');
 const conn = require('../db/mongoose')
 
@@ -11,13 +12,6 @@ chai.use(chaiHttp)
  * GET REQUESTS
  */
 describe('GET /api/v1/filmovi', () =>{
-
-      // Closing db after testing
-      after((done) => {
-        conn.close()
-        .then(() => done())
-        .catch((err) => done(err))
-      })
 
       //GET all films
       it('Should get all films', (done) =>{
@@ -60,9 +54,9 @@ describe('GET /api/v1/filmovi', () =>{
           res.should.be.json
           res.body.should.be.a('object') //  ||  res.should.be.a('object')
           res.body.film[0].should.have.property('title')
-          res.body.film[0].should.have.property('year')
           res.body.film[0].should.have.property('rating')
           res.body.film[0].should.have.property('plot')
+          res.body.film[0].should.have.property('year').eq(1971)
           done();
         });
       })
@@ -73,8 +67,40 @@ describe('GET /api/v1/filmovi', () =>{
  5ea544260419b21b28a884ba
  */
 
+/**
+ * POST REQUESTS
+ */
+ describe('POST api/v1/filmovi', () => {
 
+      // after goes at the last describe
+      after((done) => {
+        conn.close()
+        .then(() => done())
+        .catch((err) => done(err))
+      })
 
+      it('Should post film on /api/v1/filmovi', (done) =>{
+        const newMovie = {
+          title: "Deer Hunter",
+          rating: 100,
+          year: 1978,
+          runtime: 181,
+          director: "Michael Cimino",
+          plot: "Vietnam War"
+        }
+        chai.request(index)
+          .post('/api/v1/filmovi')
+          .send(newMovie)
+          .end((err, res) => {
+            res.should.have.status(201)
+            res.should.be.json
+            res.body.newFilm.should.be.a('object') //  ||  res.should.be.a('object')
+            res.body.newFilm.should.have.property('title').eq('Deer Hunter')
+            res.body.newFilm.should.have.property('rating').eq(100)
+            res.body.newFilm.should.have.property('plot').eq('Vietnam War')
+            res.body.newFilm.should.have.property('year').eq(1978)
+            done();
+          });
+      })
 
-// POST requests
-// .........
+ })

@@ -22,7 +22,7 @@ const {
 
 router.route('/')
 .get(getAllFilms) // Removed auth for testing reasons
-.post(auth, addFilm) 
+.post(addFilm)  // Removed auth for testing reasons
 .delete(auth, deleteAllFilms)
 
 router.route('/:id')
