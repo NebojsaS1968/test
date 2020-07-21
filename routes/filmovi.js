@@ -22,13 +22,13 @@ const {
 
 router.route('/')
 .get(getAllFilms) // Removed auth for testing reasons
-.post(addFilm)  // Removed auth for testing reasons
+.post(validacija(addFilmSchema), addFilm)  // Removed auth for testing reasons
 .delete(auth, deleteAllFilms)
 
 router.route('/:id')
 .get(getFilmById)
 .put([auth, validacija(addFilmSchema)], updateFilm)
-.delete(auth, deleteFilm)
+.delete(deleteFilm) // Removed auth for testing reasons
 .patch([auth, validacija(updateFilmSchema)], updateFilm)
 
 router.get('/:id/plot', auth, getFilmPlot)

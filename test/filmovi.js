@@ -1,7 +1,6 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 
-const Film = require('../models/film')
 const index = require('../server');
 const conn = require('../db/mongoose')
 
@@ -72,6 +71,53 @@ describe('GET /api/v1/filmovi', () =>{
  */
  describe('POST api/v1/filmovi', () => {
 
+      it('Should post film on /api/v1/filmovi', (done) =>{
+          const newMovie = {
+            title: "Deer Hunter",
+            rating: 100,
+            year: 1978,
+            runtime: 181,
+            director: "Michael Cimino",
+            plot: "Vietnam War"
+          }
+          chai.request(index)
+            .post('/api/v1/filmovi')
+            .send(newMovie)
+            .end((err, res) => {
+              res.should.have.status(201)
+              res.should.be.json
+              res.body.newFilm.should.be.a('object') //  ||  res.should.be.a('object')
+              res.body.newFilm.should.have.property('title').eq('Deer Hunter')
+              res.body.newFilm.should.have.property('rating').eq(100)
+              res.body.newFilm.should.have.property('plot').eq('Vietnam War')
+              res.body.newFilm.should.have.property('year').eq(1978)
+              done();
+            });
+      })
+
+
+      it('Should NOT POST film due to fail validation', (done) =>{
+          const newMovie = {
+            title: "Deer Hunter",
+            rating: 100,
+            year: 1978,
+            runtime: 181,
+            director: "Michael Cimino"
+            // plot: "Vietnam War"
+          }
+          chai.request(index)
+            .post('/api/v1/filmovi')
+            .send(newMovie)
+            .end((err, res) => {
+              res.should.have.status(400)
+              done();
+            });
+      })
+
+ })
+
+
+ describe('DELETE on api/v1/filmovi/:id', () => {
       // after goes at the last describe
       after((done) => {
         conn.close()
@@ -79,28 +125,13 @@ describe('GET /api/v1/filmovi', () =>{
         .catch((err) => done(err))
       })
 
-      it('Should post film on /api/v1/filmovi', (done) =>{
-        const newMovie = {
-          title: "Deer Hunter",
-          rating: 100,
-          year: 1978,
-          runtime: 181,
-          director: "Michael Cimino",
-          plot: "Vietnam War"
-        }
+      it('Should delete a film with specific ID', (done) => {
+        const id = '5ea543a80419b21b28a884b9'
         chai.request(index)
-          .post('/api/v1/filmovi')
-          .send(newMovie)
-          .end((err, res) => {
-            res.should.have.status(201)
-            res.should.be.json
-            res.body.newFilm.should.be.a('object') //  ||  res.should.be.a('object')
-            res.body.newFilm.should.have.property('title').eq('Deer Hunter')
-            res.body.newFilm.should.have.property('rating').eq(100)
-            res.body.newFilm.should.have.property('plot').eq('Vietnam War')
-            res.body.newFilm.should.have.property('year').eq(1978)
-            done();
-          });
+        .delete('/api/v1/filmovi/' + id)
+        .end((err, res) => {
+          res.should.have.status(200)
+          done()
+        })
       })
-
  })
