@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1= film.title + ' ' + '(' + film.year + ')'    
+    h4 Rating #{film.rating}
+    h4 Directed by #{film.director}
+    h4 Runtime #{film.runtime} minutes
+    h4= film.plot
+
+    hr
+    a(href="/api/v1/filmovi/edit/" + film._id) Edit
+    br
+    br
+    a#deleteOne(href="#", dataId = film._id) Delete

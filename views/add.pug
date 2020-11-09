@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method='post', action='/api/v1/filmovi/add')
+    
+        label Title:
+        input(name='title', type='text')
+        br
+        br
+        label Year:
+        input(name='year', type='text')
+        br
+        br
+        label Director:
+        input(name='director', type='text')
+        br
+        br
+        label Rating:
+        input(name='rating', type='text')
+        br
+        br
+        label Runtime:
+        input(name='runtime', type='text')
+        br
+        br
+        label Plot:
+        input(name='plot', type='text')
+        br
+        br
+        input(type='submit', value='Submit')

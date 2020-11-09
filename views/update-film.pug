@@ -1,0 +1,31 @@
+extends layout
+
+block content
+    h1 Edit film #{title}
+    form(method='post', action='/api/v1/filmovi/edit/' + film._id)
+    
+        label Title:
+        input(name='title', type='text', value=film.title)
+        br
+        br
+        label Year:
+        input(name='year', type='text', value=film.year)
+        br
+        br
+        label Director:
+        input(name='director', type='text', value=film.director)
+        br
+        br
+        label Rating:
+        input(name='rating', type='text', value=film.rating)
+        br
+        br
+        label Runtime:
+        input(name="runtime", value=film.runtime)
+        br
+        br
+        label Plot:
+        textarea(name="plot", rols=30, cols=30)= film.plot
+        br
+        br
+        input(type='submit', value='Edit')

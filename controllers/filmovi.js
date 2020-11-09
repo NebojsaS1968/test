@@ -1,60 +1,26 @@
 const Film = require("../models/film")
 
-const sortFilmove = (a, b, value) => {
-  if (a[value] < b[value]) {
-    return -1
-  }
-  if (a[value] > b[value]) {
-    return 1
-  }
-  return 0
-}
-
+// @@@ getAllFilms @@@ //
 const getAllFilms = async (req, res, next) => {
-  //CASE 1
-  if(req.query.sort === "godina" && req.query.order === "asc"){
-    const film = await Film.find({})
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "year"))
-    res.status(200).send({ filmovi })
-  }
-
-  //CASE 2
-  if(req.query.sort === "godina" && req.query.order === "desc"){
-    const film = await Film.find({})
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "year")).reverse()
-    res.status(200).send({ filmovi })
-  }
-
-  //CASE 3
-  if(req.query.sort === "ocena" && req.query.order === "desc"){
-    const film = await Film.find({})
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "rating"))
-    res.status(200).send({ filmovi })
-  }
-
-  //CASE 4
-  if(req.query.sort === "ocena" && req.query.order === "asc"){
-    const film = await Film.find({})
-    const filmovi = film.sort((a, b) => sortFilmove(a, b, "rating")).reverse()
-    res.status(200).send({ filmovi })
-  }
-
-  //CASE 5
-  if (!req.query.sort && !req.query.order) {
-    if (req.query.limit){
-      const filmovi = await Film.find({}).limit(parseInt(req.query.limit))
-      return res.status(200).send(filmovi)
-   }
-    const Filmovi = await Film.find({})
-    res.status(200)
-    res.send({ filmovi: Filmovi })
-  }
+  await Film.find({}, (err, films) => {
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.render('index', {
+        title: "My films",
+        films: films
+      });
+    }
+  });
 }
 
 const getFilmById = async (req, res, next) => {
-  const { id } = req.params
-  const film = await Film.findById(id).populate("actors").populate("users")
-  res.status(200).send({ film })
+  const { id } = req.params;
+  const film = await Film.findById(id).populate("actors").populate("users");
+  res.render('film', {
+    film: film
+  });
 }
 
 const getFilmByTitle = async (req, res, next) => {
@@ -67,22 +33,33 @@ const getFilmByTitle = async (req, res, next) => {
   }
 }
 
-const getFilmPlot = async (req, res, next) => {
-  const { id } = req.params
-  const film = await Film.findById(id)
-    const opis = {
-      "Film": film.title,
-      "Opis": film.plot
-    }
-    res.status(200).send({ opis })
-  }
-
-
+// @@@ getForm and addFilm @@@ //
+const addForm = async (req, res, next) => {
+  res.render('add', {
+    title: "Add Film"
+  })
+}
 
 const addFilm = async (req, res, next) => {
-  console.log(req.body)
-  const newFilm = {
-    title:  req.body.title,
+  // JUST FOR SERVER SIDE WITHOUT PUG
+  /* 
+      console.log(req.body)
+      const newFilm = {
+      title:  req.body.title,
+      year: req.body.year,
+      genres: req.body.genres,
+      director: req.body.director,
+      plot: req.body.plot,
+      rating: req.body.rating,
+      actors: req.body.actors,
+      runtime: req.body.runtime
+      }
+      const movie = new Film(newFilm)
+      const saveMovie = await movie.save()
+      res.status(201).json({ msg: "Film is saved", newFilm: saveMovie })
+*/
+  const film = {
+    title: req.body.title,
     year: req.body.year,
     genres: req.body.genres,
     director: req.body.director,
@@ -91,23 +68,65 @@ const addFilm = async (req, res, next) => {
     actors: req.body.actors,
     runtime: req.body.runtime
   }
-  const movie = new Film(newFilm)
-  const saveMovie = await movie.save()
-  res.status(201).json({ msg: "Film is saved", newFilm: saveMovie })
+  const movie = new Film(film)
+  await movie.save((err) => {
+    if(err){
+      console.log(err)
+    } else {
+      res.redirect('/api/v1/filmovi')
+    }
+  })
+
+  /* Objasnjenje: 
+    1. Nakon cuvanja novog filma iz forme, res.redirect salje korisnika na /api/v1/filmovi rutu. 
+    2. Redirect poziva GET metodu i aktivira se funkcija namenjena za tu rutu i tu metodu, getAllFilms.  
+    3. U getAllFilms funkciji se traze svi filmovi u bazi, i tu ce biti nas novi sacuvani film
+    4. Zatim se renderuje index.pug fajl koji prikayuje sve filmove u listi
+  */
 }
 
-
-const deleteFilm = async (req, res, next) =>{
-  const { id } = req.params
-  await Film.findByIdAndDelete(id)
-  res.status(200).send({ msg: "Film is deleted" })
+// UPDATE || EDIT FILM
+const updateForm = async (req, res, next) => {
+  const { id } = req.params;
+  const film = await Film.findById(id).populate("actors").populate("users");
+  res.render('update-film', {
+    title: film.title ,
+    film: film
+  });
 }
 
 const updateFilm = async (req, res, next) =>{
+  // const { id } = req.params
+  const update = {
+    title: req.body.title,
+    year: req.body.year,
+    director: req.body.director,
+    plot: req.body.plot,
+    rating: req.body.rating
+  }  
+  const query = {_id:req.params.id}
+  await Film.findOneAndUpdate(query, update, (err) => {
+    if(err){
+      console.log(err)
+    } else {
+      res.redirect('/api/v1/filmovi')
+    }
+  })
+  // send({ msg: "Film is updated" })
+}
+
+const deleteFilm = async (req, res, next) =>{
+  // const query = {_id:req.params.id}
   const { id } = req.params
-  const update = req.body
-  await Film.findByIdAndUpdate(id, update)
-  res.status(200).send({ msg: "Film is updated" })
+  await Film.findByIdAndDelete(id, (err) => {
+    if(err){
+      console.log(err);
+    } else {
+      res.status(200).send("Film has been deleted.")
+    }
+  })
+  
+  // res.status(200).send({ msg: "Film is deleted" })
 }
 
 const deleteAllFilms = async (req, res, next) =>{
@@ -118,10 +137,15 @@ const deleteAllFilms = async (req, res, next) =>{
 module.exports = {
    getAllFilms,
    getFilmById, 
-   getFilmPlot, 
+
    addFilm, 
-   deleteFilm, 
+   addForm,
+
+   updateForm,
    updateFilm,
+
+   deleteFilm,
    getFilmByTitle,
-   deleteAllFilms
+   deleteAllFilms,
+   
   }

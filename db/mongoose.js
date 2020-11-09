@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 
+// needed because deprication issue with MongoDB findOneAndUpdate
+mongoose.set('useFindAndModify', false);
+
 const connect = () =>{
     return new Promise((resolve, reject) =>{
         mongoose
