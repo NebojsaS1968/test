@@ -81,7 +81,7 @@ const addFilm = async (req, res, next) => {
     1. Nakon cuvanja novog filma iz forme, res.redirect salje korisnika na /api/v1/filmovi rutu. 
     2. Redirect poziva GET metodu i aktivira se funkcija namenjena za tu rutu i tu metodu, getAllFilms.  
     3. U getAllFilms funkciji se traze svi filmovi u bazi, i tu ce biti nas novi sacuvani film
-    4. Zatim se renderuje index.pug fajl koji prikayuje sve filmove u listi
+    4. Zatim se renderuje index.pug fajl koji prikazuje sve filmove u listi
   */
 }
 

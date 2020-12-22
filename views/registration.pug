@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method="post", action="/api/v1/registration")
+        label Username 
+        input(type="text", name="username")
+        br
+        br
+        label Email 
+        input(type="email", name="email")
+        br
+        br
+        label Password 
+        input(type="password", name="password")
+        br
+        br
+        label Re-enter password 
+        input(type="password", name="password2")
+        br
+        br
+        input(type="submit", value="Register")

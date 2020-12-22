@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method="post", action="/api/v1/login")
+        label Email  
+        input(type="email", name="email")
+        br
+        br
+        label Password  
+        input(type="password", name="password")
+        br
+        br
+        input(type="submit", value="Login")
+

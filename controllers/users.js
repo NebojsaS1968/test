@@ -3,14 +3,7 @@ const Film = require("../models/film")
 
 const getUsers = async (req, res, next) => {
   const user = await User.find({})
-  res.status(200).send({ user })
-}
-
-const addUser = async (req, res, next) => {
-  const newUser = { name: req.body.name }
-  const user = new User(newUser)
-  const save = await user.save()
-  res.status(201).send(save)
+  res.status(200).send({ users: user })
 }
 
 const addToWatchlist = async (req, res, next) => {
@@ -53,7 +46,7 @@ const deleteFilm = async (req, res, next) => {
 const clearUsers = async (req, res, next) => {
   await User.deleteMany()
   res.status(200).send({ msg: "Empty users!"})
-};
+}
 
 const rateFilm = async (req, res, next) => {
   const { movie } = req.body
@@ -80,7 +73,6 @@ const rateFilm = async (req, res, next) => {
 
 module.exports = {
   getUsers,
-  addUser,
   addToWatchlist,
   getUserById,
   deleteFilm,

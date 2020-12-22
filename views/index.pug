@@ -2,10 +2,16 @@ extends layout
 
 block content 
     h1 #{title}
+    h3 #{loggedUser}
     ul
     each film in films 
         li 
             a(href="/api/v1/filmovi/" + film._id)= film.title
+    br
+    button    
+        a(href="/api/v1/filmovi/add") Add Film
+    br
+    br
     button
         a#deleteAll(href="#") Delete All Films
     

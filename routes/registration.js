@@ -8,9 +8,16 @@ const {
  } = require("../middlewares/validation/schemas/users")
 
 const {
-   regUser
+   registerValid
+} = require('../middlewares/validation/register')
+
+const {
+   regUser,
+   getRegForm
 } = Registration
 
-router.route('/').post(validacija(addUserSchema), regUser)
+router.route('/')
+.get(getRegForm)
+.post(validacija(addUserSchema), registerValid, regUser)
 
 module.exports = router

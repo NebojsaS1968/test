@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { auth } = require('../middlewares/validation/auth')
 const Watchlist = require("../controllers/users");
 const { validacija } = require("../middlewares/validation/validate");
 const {
@@ -11,7 +11,6 @@ const {
 const {
   getUsers,
   addToWatchlist,
-  addUser,
   getUserById,
   deleteFilm,
   clearUsers,
@@ -20,13 +19,12 @@ const {
 
 router
   .route("/")
-  .get(getUsers)
-  .post(validacija(addUserSchema), addUser)
-  .delete(clearUsers)
+  .get(auth, getUsers)
+  .delete(auth, clearUsers)
 router
   .route("/:id")
   .patch(validacija(addWatchSchema), addToWatchlist)
-  .get(getUserById)
+  .get(auth, getUserById)
   .delete(deleteFilm)
 
 router.route("/:id/rate")

@@ -8,9 +8,15 @@ const {
  } = require("../middlewares/validation/schemas/users") 
  
 const {
-   findUser
+   // findUser
+   getLoginForm,
+   postLoginForm
 } = Login
 
-router.route('/').post(validacija(addUserSchema), findUser)
+router.route('/')
+.get(getLoginForm)
+.post(postLoginForm)
+
+// router.route('/').post(validacija(addUserSchema), findUser)
 
 module.exports = router
