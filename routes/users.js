@@ -10,20 +10,18 @@ const {
 
 const {
   getUsers,
-  addToWatchlist,
+  // addToWatchlist,
   getUserById,
   deleteFilm,
   clearUsers,
   rateFilm
 } = Watchlist
 
-router
-  .route("/")
+router.route("/")
   .get(auth, getUsers)
-  .delete(auth, clearUsers)
-router
-  .route("/:id")
-  .patch(validacija(addWatchSchema), addToWatchlist)
+  .delete(clearUsers)
+
+router.route("/:id/watchlist")
   .get(auth, getUserById)
   .delete(deleteFilm)
 

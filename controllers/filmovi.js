@@ -1,4 +1,5 @@
 const Film = require("../models/film")
+const User = require('../models/user')
 
 // @@@ getAllFilms @@@ //
 const getAllFilms = async (req, res, next) => {
@@ -17,12 +18,13 @@ const getAllFilms = async (req, res, next) => {
 
 const getFilmById = async (req, res, next) => {
   const { id } = req.params;
-  const film = await Film.findById(id).populate("actors").populate("users");
+  const film = await Film.findById(id)
   res.render('film', {
     film: film
   });
 }
 
+// Search line needed in pug
 const getFilmByTitle = async (req, res, next) => {
   const { title } = req.params
   const film = await Film.find().where("title").equals(new RegExp(title, "i"))
@@ -41,23 +43,6 @@ const addForm = async (req, res, next) => {
 }
 
 const addFilm = async (req, res, next) => {
-  // JUST FOR SERVER SIDE WITHOUT PUG
-  /* 
-      console.log(req.body)
-      const newFilm = {
-      title:  req.body.title,
-      year: req.body.year,
-      genres: req.body.genres,
-      director: req.body.director,
-      plot: req.body.plot,
-      rating: req.body.rating,
-      actors: req.body.actors,
-      runtime: req.body.runtime
-      }
-      const movie = new Film(newFilm)
-      const saveMovie = await movie.save()
-      res.status(201).json({ msg: "Film is saved", newFilm: saveMovie })
-*/
   const film = {
     title: req.body.title,
     year: req.body.year,
@@ -88,7 +73,7 @@ const addFilm = async (req, res, next) => {
 // UPDATE || EDIT FILM
 const updateForm = async (req, res, next) => {
   const { id } = req.params;
-  const film = await Film.findById(id).populate("actors").populate("users");
+  const film = await Film.findById(id)
   res.render('update-film', {
     title: film.title ,
     film: film
@@ -125,13 +110,34 @@ const deleteFilm = async (req, res, next) =>{
       res.status(200).send("Film has been deleted.")
     }
   })
-  
-  // res.status(200).send({ msg: "Film is deleted" })
 }
 
 const deleteAllFilms = async (req, res, next) =>{
   await Film.deleteMany()
   res.status(200).send({msg: "Empty films!"})
+}
+
+const addToUserWatchlist = async (req, res, next) => {
+  const userId = req.userId
+  const query = {_id:req.params.id}
+
+  const film = await Film.findOne(query)
+  const user = await User.findById(userId)
+
+  for(i=0; i<user.watchlist.length; i++){
+    if(user.watchlist[i].movie === req.params._id || film.users.includes(userId)) {
+      console.log(film.users)
+      return res.status(200).send({ msg: "This film is already in your watchlist." })
+    } else if(user){
+      user.watchlist.push(query)
+      const saveUser = await user.save()
+
+      film.users.push(userId)
+      await film.save()
+
+      return res.status(201).send({ msg: saveUser })
+    }
+  }
 }
 
 module.exports = {
@@ -148,4 +154,5 @@ module.exports = {
    getFilmByTitle,
    deleteAllFilms,
    
+   addToUserWatchlist
   }

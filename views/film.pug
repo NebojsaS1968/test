@@ -12,3 +12,7 @@ block content
     br
     br
     a#deleteOne(href="#", dataId = film._id) Delete
+    br
+    br
+    form(action="/api/v1/filmovi/" + film._id, method="post")
+        input(type="submit", name="addToWatchlist", value="Add to Watchlist") 

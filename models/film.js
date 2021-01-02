@@ -9,11 +9,9 @@ const film = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user"
   }],
-  actors: String,
   genres: [String],
   director: String,
-  plot: String,
-  posterUrl: String
+  plot: String
 });
 const Film = mongoose.model("film", film)
 module.exports = Film

@@ -9,7 +9,7 @@ const addUserSchema = Joi.object({
 
 const addWatchSchema = Joi.object({
     name: Joi.string(),
-    movies: Joi.array().items(Joi.string()),
+    watchlist: Joi.array().items(Joi.string()),
     grade: Joi.number(),
     movie: Joi.string()
 });

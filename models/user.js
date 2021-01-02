@@ -4,7 +4,7 @@ const user = new Schema({
   username: String,
   password: String,
   email: String,
-  movies: [
+  watchlist: [
     {
       movie: {
         type: Schema.Types.ObjectId,

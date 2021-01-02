@@ -2,32 +2,13 @@ const User = require("../models/user")
 const Film = require("../models/film")
 
 const getUsers = async (req, res, next) => {
-  const user = await User.find({})
+  const user = await User.find({}).populate("movie")
   res.status(200).send({ users: user })
-}
-
-const addToWatchlist = async (req, res, next) => {
-  const { id } = req.params
-  const { movies } = req.body
-
-  const user = await User.findById(id)
-  const movie = await Film.findById(movies)
-  console.log(movie)
-  if (user.watchlist.includes(movies) || movie.users.includes(id)) {
-    res.status(200).send({ msg: "Movie already exists in this user watchlist!" })
-  } else if (movie) {
-    movie.users.push(id)
-    const save = await movie.save()
-
-    user.watchlist.push(movies)
-    await user.save()
-    res.status(201).send(save)
-  } else res.status(200).send({ error: "Wrong id!" })
 }
 
 const getUserById = async (req, res, next) => {
   const { id } = req.params
-  const user = await User.findById(id)
+  const user = await User.findById(id).populate("watchlist")
   res.status(200).send({ user })
 }
 
@@ -57,7 +38,7 @@ const rateFilm = async (req, res, next) => {
   const film = await Film.findById(movie)
   
     if(user.movies.includes(movie) || film.users.includes(id)){
-      const index = user.movies.findIndex(i => i.id === movie)
+      const index = user.movies.findIndex((i) => i.id === movie)
       user.movies[index].grade = grade
       const save = await user.save()
       return res.status(201).send(save)
@@ -73,7 +54,7 @@ const rateFilm = async (req, res, next) => {
 
 module.exports = {
   getUsers,
-  addToWatchlist,
+  // addToWatchlist,
   getUserById,
   deleteFilm,
   clearUsers,

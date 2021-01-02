@@ -21,7 +21,9 @@ const {
 
    deleteFilm, 
    getFilmByTitle,
-   deleteAllFilms 
+   deleteAllFilms,
+
+   addToUserWatchlist
   } = Filmovi
 
 router.route('/')
@@ -36,6 +38,7 @@ router.route('/:id')
 .get(getFilmById)
 .delete(auth, deleteFilm) 
 .patch([auth, validacija(updateFilmSchema)], updateFilm)
+.post(auth, addToUserWatchlist)
 
 router.route('/edit/:id')
 .get(auth, updateForm)
