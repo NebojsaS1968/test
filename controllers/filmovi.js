@@ -18,7 +18,7 @@ const getAllFilms = async (req, res, next) => {
 
 const getFilmById = async (req, res, next) => {
   const { id } = req.params;
-  const film = await Film.findById(id)
+  const film = await Film.findById(id).populate("users")
   res.render('film', {
     film: film
   });
@@ -119,17 +119,16 @@ const deleteAllFilms = async (req, res, next) =>{
 
 const addToUserWatchlist = async (req, res, next) => {
   const userId = req.userId
-  const query = {_id:req.params.id}
+  const { id } = req.params
 
-  const film = await Film.findOne(query)
+  const film = await Film.findById(id)
   const user = await User.findById(userId)
 
-  for(i=0; i<user.watchlist.length; i++){
-    if(user.watchlist[i].movie === req.params._id || film.users.includes(userId)) {
-      console.log(film.users)
+
+    if(user.watchlist.includes(id) || film.users.includes(userId)) {
       return res.status(200).send({ msg: "This film is already in your watchlist." })
-    } else if(user){
-      user.watchlist.push(query)
+    } else {
+      user.watchlist.push(id)
       const saveUser = await user.save()
 
       film.users.push(userId)
@@ -137,7 +136,6 @@ const addToUserWatchlist = async (req, res, next) => {
 
       return res.status(201).send({ msg: saveUser })
     }
-  }
 }
 
 module.exports = {

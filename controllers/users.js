@@ -2,7 +2,7 @@ const User = require("../models/user")
 const Film = require("../models/film")
 
 const getUsers = async (req, res, next) => {
-  const user = await User.find({}).populate("movie")
+  const user = await User.find({}).populate("watchlist")
   res.status(200).send({ users: user })
 }
 
@@ -33,6 +33,9 @@ const rateFilm = async (req, res, next) => {
   const { movie } = req.body
   const { id } = req.params
   const { grade } = req.body
+
+  // CAN WORK WITH RADIO BUTTONS
+  // req.body.name
 
   const user = await User.findById(id)
   const film = await Film.findById(movie)

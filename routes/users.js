@@ -10,7 +10,6 @@ const {
 
 const {
   getUsers,
-  // addToWatchlist,
   getUserById,
   deleteFilm,
   clearUsers,
