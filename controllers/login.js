@@ -14,7 +14,7 @@ const postLoginForm = async (req, res, next) => {
         return res.status(400).send({ err:"Wrong password" })
     }
 
-    const jwtToken = jwt.sign({ username: user.username, userId: user._id }, secret, { expiresIn: "900000" })
+    const jwtToken = jwt.sign({ username: user.username, userId: user._id }, secret, { expiresIn: "9000000" })
       const cookie = res.cookie('token', jwtToken, {
       maxAge: 1000 * 60 * 30,
       secure: false,

@@ -1,4 +1,12 @@
 extends layout 
 
 block content 
-    h3 Welcome #{name}
+    h3 #{name}'s Film Library
+    br
+    br
+    h4 My Watchlist
+        ul
+        each film in watchlist
+            li= film.id
+            li= film.grade
+            br
