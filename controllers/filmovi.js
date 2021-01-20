@@ -9,7 +9,7 @@ const getAllFilms = async (req, res, next) => {
     }
     else{
       res.render('index', {
-        title: "My films",
+        title: "Films",
         films: films
       });
     }
@@ -143,7 +143,8 @@ const rateFilm = async (req, res, next) => {
   const { grade } = req.body
   const userId = req.userId
 
-  let movies = []
+  const filteredFilms = []
+  let countOfFilms = 0
 
   const user = await User.findById(userId)
   const film = await Film.findById(id)
@@ -152,22 +153,26 @@ const rateFilm = async (req, res, next) => {
       const index = user.watchlist.findIndex((i) => i.id === id)
       user.watchlist[index].grade = grade
       await user.save()
+      film.grade = grade
+      await film.save()
+
       let watchlist = user.watchlist
-      // CANT GET THE TITLE OF THE FILMS!!!!!!!!!!!!
-      // ---------------------------------------------
-      /*const films = await Film.find({})
-      for(i=0; i<watchlist; i++){
-        if(films[i].id === watchlist[i].id){
-          movies.push(films[i])
-          console.log(11)
-        } else {
-          console.log(22)
+      const films = await Film.find({})
+
+      films.forEach((film) => {
+        for(i=0; i<watchlist.length; i++){
+          if(watchlist[i].id === film.id){
+            filteredFilms.push(film)
+            countOfFilms++
+          } 
         }
-      }
-      console.log(films[1].id) */
+      })
+
+      console.log(`Number of films in the watchlist: ${countOfFilms}`);
       return res.render('user', {
         name: user.username,
-        watchlist: watchlist
+        filteredFilms: filteredFilms,
+        count: countOfFilms
       })
     }
     

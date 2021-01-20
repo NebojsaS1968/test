@@ -10,6 +10,7 @@ const film = new Schema({
     ref: "user"
   }],
   genres: [String],
+  grade: Number,
   director: String,
   plot: String
 });

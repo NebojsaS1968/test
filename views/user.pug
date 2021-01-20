@@ -6,7 +6,8 @@ block content
     br
     h4 My Watchlist
         ul
-        each film in watchlist
-            li= film.id
+        each film in filteredFilms
+            li= film.title
             li= film.grade
             br
+
